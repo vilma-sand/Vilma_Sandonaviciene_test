@@ -23,14 +23,19 @@ jobs:
           npm install -g newman-reporter-htmlextra
       - name: Fetch Postman collection
         run: |
-          curl -X GET "https://api.getpostman.com/collections/36024363-3f9438a8-2da2-427d-af58-d828b6d6239f" \
+          curl -X GET "https://api.getpostman.com/collections/32916326-1d5c1127-e9c3-4691-bb5a-35e4531b8621" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > collection.json
         shell: bash
       - name: Fetch Postman environment
         run: |
-          curl -X GET "https://api.getpostman.com/environments/36024363-89aee613-ef52-4ade-a3ab-8bacd33be594" \
+          curl -X GET "https://api.getpostman.com/environments/32916326-e4940ddc-907f-4f20-abae-fe4ead2ea763" \
             -H "X-Api-Key: ${POSTMAN_API_KEY}" > environment.json
         shell: bash
       - name: Run API test
         run: |
-          newman run collection.json -e environment.json --reporters cli,htmlextra --reporter-htmlextra-export report-${{ matrix.os }}.html  
+          newman run collection.json -e environment.json --reporters cli,htmlextra --reporter-htmlextra-export report-${{ matrix.os }}.html
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: newman-report-${{ matrix.os }}
+          path: report-${{ matrix.os }}.html
